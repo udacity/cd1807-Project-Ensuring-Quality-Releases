@@ -65,6 +65,12 @@ stages:
     #     knownHostsEntry: 'KNOWN_HOSTS_STRING' # variable value
     #     sshPublicKey: 'PUBLIC_KEY'            # variable value
     #     sshKeySecureFile: 'id_rsa' # Use secure file feature in the pipeline library UI to save the "id_rsa" file, as mentioned here: https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops#add-a-secure-file
+    
+    # - task: DownloadSecureFile@1
+    #  name: udacity_public_key
+    #  displayName: 
+    #  inputs:
+    #   secureFile: 
 
     
     # Run Terraform Apply
@@ -200,22 +206,26 @@ stages:
               workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
               
   #--------------------------------------------#  
-  # Selenium (UI) Tests
+  # Selenium | Functional UI Tests
   # ToDo: 
   - deployment: VMDeploy
-    displayName: Selenium Tests | Run UI Tests on the VM
+    displayName: Selenium Tests
     environment:
-      name:         # ToDo
+      name:         # ToDo: Change/provide a name
       resourceType: VirtualMachine
       tags: selenium
     strategy:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: drop-ui-tests     # ToDo: Change/provide a name
+            
           - task: Bash@3
             inputs:
               targetType: 'inline'
-              script: |           # ToDo: Write your commands
+              script: |           
+                # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
                 #! /bin/bash
                 
                 sudo apt-get upgrade -y
@@ -223,14 +233,10 @@ stages:
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
                 pip3 install selenium
-                FILE=/home/testuser/app/chromedriver_linux64.zip
-                if [ ! -f "$FILE" ]; then
-                    LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-                    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-                    unzip -o chromedriver_linux64.zip
-                    sudo ln -s $PWD/chromedriver /usr/local/bin/chromedriver
-                fi
-                export PATH=$PATH:/home/testuser/app      # ToDo: Update the path
+                
+                #  ToDo: Add chromedriver executable to path
+                export PATH=$PATH:/path/to/chromedriver     
+                
                 # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
                 # ToDo: Direct the output of the Selenium Test Suite to a log file
                 
