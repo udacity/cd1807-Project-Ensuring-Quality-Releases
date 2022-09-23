@@ -1,67 +1,73 @@
 name: Azure Pipelines
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+trigger:
+- main
+
+# ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
+# Otherwise comment out the line below. 
+pool: myAgentPool
+
 variables:
   python.version: '3.7.6'
+  # ToDo: Replace the service connection name as used in the DevOps project settings
+  azureServiceConnectionId: 'myServiceConnection'
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+  # Environment name
+  environmentName: 'test'
+
 stages:
 - stage: Build
   jobs:
-  - job: Build
-    pool:
-      name: Hosted Ubuntu 1604
+  - job: BuildInfrastructure
     steps:
-    # Needed for Terraform VM deployment
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: 'KNOWN_HOSTS_STRING'
-    #     sshPublicKey: 'PUBLIC_KEY'
-    #     sshKeySecureFile: 'id_rsa'
-    - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
+    # Install Terraform on the pipeline agent 
+    - task: TerraformInstaller@0
+      displayName: 'Terrafom installation'
       inputs:
-        rootFolderOrFile: 'path/to/fakerestapi'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
-      displayName: 'Upload Package'
-      artifact: drop-fakerestapi
-- stage:
-  jobs:
-  - deployment: FakeRestAPI
-    pool:
-      vmImage: 'Ubuntu-16.04'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App'
-            inputs:
-              azureSubscription: ''
-              appName: ''
-              appType: webApp
-              package: $(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip
-  # - deployment: VMDeploy
-  #   displayName: NAME
-  #   environment:
-  #     name:  ENVIRONMENT NAME
-  #     resourceType: VirtualMachine
-  #     tags: TAG NAME
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - task: Bash@3
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: |
-  #               #! /bin/bash
-                
-  #               sudo apt-get upgrade -y
-  #               sudo apt-get install python3-pip -y
-  #               sudo apt-get install unzip -y
-  #               sudo apt-get install -y chromium-browser
-  #               pip3 install selenium
-  #               export PATH=$PATH:some/path
+        terraformVersion: '1.2.9'
+    
+    # Run Terraform Init on the pipeline agent 
+    # ToDo: Replace the resource group name, storage account name, and container name below
+    - task: TerraformTaskV3@3
+      displayName: 'Terrafom init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        backendServiceArm: '$(azureServiceConnectionId)'
+        backendAzureRmResourceGroupName: 'Azuredevops'
+        backendAzureRmStorageAccountName: 'tfstate281845088'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'test.terraform.tfstate'
 
+    # Run Terraform Validate    
+    - task: TerraformTaskV3@3
+      displayName: Terraform validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
 
+    
+    # Run Terraform Apply
+    # ToDo: Change the workingDirectory path, as applicable to you
+    - task: TerraformTaskV3@3
+      displayName: Terraform apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+
+    # Destroy the resources in Azure
+    # ToDo: Change the workingDirectory path, as applicable to you
+    - task: TerraformTaskV3@3
+      displayName: Terraform destroy
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'        
