@@ -7,10 +7,10 @@ provider "azurerm" {
 }
 terraform {
   backend "azurerm" {
-    storage_account_name = ""
-    container_name       = ""
-    key                  = ""
-    access_key           = ""
+    storage_account_name = "tfstate289024787"
+    container_name       = "tfstate"
+    key                  = "test.terraform.tfstate"
+    access_key           = "safg72HvjOJpZazH8qhXVC4AcxFN7vV9uoMRE0lu13e8b4eYxhm9+37OnHFeOx1S0ZGmTk8THXbk+AStRN+/sw=="
   }
 }
 module "resource_group" {
@@ -51,4 +51,16 @@ module "publicip" {
   application_type = "${var.application_type}"
   resource_type    = "publicip"
   resource_group   = "${module.resource_group.resource_group_name}"
+}
+
+module "vm" {
+  source               = "../../modules/vm"
+  location             = var.location
+  application_type     = var.application_type
+  resource_type        = "VM"
+  resource_group       = module.resource_group.resource_group_name
+  admin_username       = var.admin_username
+  subnet_id            = module.network.subnet_id_test
+  public_ip_address_id = module.publicip.public_ip_address_id
+  #public_key           = var.public_key
 }
