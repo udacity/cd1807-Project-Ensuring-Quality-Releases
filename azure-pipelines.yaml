@@ -30,27 +30,26 @@ stages:
     #--------------------------------------------#  
     # Use Terraform to create the Infrastructure      
     # Install Terraform on the pipeline agent 
-    - task: TerraformInstaller@0
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
       displayName: 'Terrafom installation'
       inputs:
         terraformVersion: '1.2.9'
     
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: TerraformTaskV3@3
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: 'Terrafom init'
       inputs:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'tfstate281845088'
-        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmResourceGroupName: ''
+        backendAzureRmStorageAccountName: ''
+        backendAzureRmContainerName: ''
         backendAzureRmKey: 'test.terraform.tfstate'
 
-    # ToDo: Run Terraform Validate    
-    - task: TerraformTaskV3@3
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
@@ -74,8 +73,7 @@ stages:
 
     
     # Run Terraform Apply
-    # ToDo: Change the workingDirectory path, as applicable to you
-    - task: TerraformTaskV3@3
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
       displayName: Terraform apply
       inputs:
         provider: 'azurerm'
@@ -99,23 +97,23 @@ stages:
     - task: CmdLine@2
       displayName: Install Newman
       inputs:
-        script:           # ToDo: Write your commands to install newman
+        script: 'sudo npm install -g newman'
         workingDirectory: $(System.DefaultWorkingDirectory)
     # Postman Data Validation Test Suite    
-    # ToDo: Verify the working directory and the newman scripts
+    # ToDo: Verify the working directory
     - task: CmdLine@2
       displayName: Run Data Validation Tests
       continueOnError: true
       inputs:
-        script:           # ToDo: Write your commands
+        script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman Regression Test Suite    
-    # ToDo: Update the command and verify the working directory
+    # ToDo: Verify the working directory
     - task: CmdLine@2
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
-        script:           # ToDo: Write your commands
+        script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman - Publish Results 
     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
@@ -149,13 +147,12 @@ stages:
       displayName: 'Archive FakeRestAPI'
       inputs:
         rootFolderOrFile: 
-        includeRootFolder:
-        archiveType: 
-        archiveFile: 
-    # FakeRestAPI - Publish    
-    - publish: 
-      displayName: 
-      artifact: 
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip
+      displayName: 'Upload Package'
+      artifact: drop-fakerestapi
 
     #--------------------------------------------#  
     # JMeter (Performance) Test Suite - Archive
@@ -164,13 +161,13 @@ stages:
       displayName: 'Archive PerformanceTestSuite'
       inputs:
         rootFolderOrFile: 
-        includeRootFolder:
-        archiveType: 
-        archiveFile: 
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
     # JMeter Test Suite - Publish    
-    - publish: 
-      displayName: 
-      artifact: 
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+      displayName: 'Upload Package'
+      artifact: drop-perftests
 
 #--------------------------------------------#  
 # DEPLOYMENT STAGE
@@ -191,18 +188,20 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription:      # ToDo
-              appName:                # ToDo
+              azureSubscription: ''     # ToDo
+              appName: ''               # ToDo
               appType: webApp
               package: $(Pipeline.Workspace)/<artifact>/<archiveFile>       # ToDo: Use the published zip artifact. 
           #--------------------------------------------#    
           # Run JMeter test suite against the App Service
-          # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.  
-          # ToDo: Generate the log file. 
           - task: CmdLine@2
             inputs:
               script: |
-                                                                            # ToDo: Write your commands
+                wget "https://apache.mirrors.lucidnetworks.net//jmeter/binaries/apache-jmeter-5.2.1.tgz"
+                tar -xf apache-jmeter-5.2.1.tgz
+                unzip -o $(Build.BuildId)-perftests.zip
+                ./apache-jmeter-5.2.1/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
+                cat jmeter.log                                                                           # ToDo: Write your commands
               workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
               
   #--------------------------------------------#  
@@ -225,7 +224,6 @@ stages:
             inputs:
               targetType: 'inline'
               script: |           
-                # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
                 #! /bin/bash
                 
                 sudo apt-get upgrade -y
@@ -233,10 +231,22 @@ stages:
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
                 pip3 install selenium
-                
-                #  ToDo: Add chromedriver executable to path
-                export PATH=$PATH:/path/to/chromedriver     
-                
-                # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
-                # ToDo: Direct the output of the Selenium Test Suite to a log file
-                
+                cd ~/
+                DIR=/home/testuser/app
+                if [ ! -d "$DIR" ]; then
+                    mkdir app
+                fi
+                mv /home/testuser/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip app
+                cd app
+                unzip -o $(Build.BuildId)-uitests.zip
+                FILE=/home/testuser/app/chromedriver_linux64.zip
+                if [ ! -f "$FILE" ]; then
+                    LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+                    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+                    unzip -o chromedriver_linux64.zip
+                    sudo ln -s $PWD/chromedriver /usr/local/bin/chromedriver
+                fi
+                export PATH=$PATH:/home/testuser/app
+                echo "Starting Selenium Tests"
+                python3 add_remove_from_cart.py >> selenium.log
+                echo "Completed Selenium Tests. Check selenium.log for results."
