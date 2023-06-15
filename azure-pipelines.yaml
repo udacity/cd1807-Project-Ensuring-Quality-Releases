@@ -8,7 +8,8 @@ trigger:
 
 # ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
 # Otherwise, comment out the line below. 
-pool: myAgentPool
+#pool: myAgentPool
+pool: "Azure Pipelines"
 
 variables:
   python.version: '3.7.6'
@@ -121,9 +122,9 @@ stages:
       inputs:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-*.xml'
-        searchFolder:       # ToDo
+        searchFolder:  '$(System.DefaultWorkingDirectory)'     # ToDo
         mergeTestResults: true
-        testRunTitle:       # ToDo
+        testRunTitle:  Test_Demo     # ToDo
 
     #--------------------------------------------#
     # Selenium (UI) Test Suite - Archive the package  
