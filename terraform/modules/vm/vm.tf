@@ -3,16 +3,16 @@
 #  resource_group_name  = "${var.resource_group}"
 #}
 
-data "azurerm_subnet" "test"{
-  name                 = "${var.application_type}-NET-sub"
-  virtual_network_name = "${var.application_type}-NET"
-  resource_group_name  = "${var.resource_group}"
-}
+#data "azurerm_subnet" "test" {
+#  name                 = "${var.application_type}-NET-sub"
+#  virtual_network_name = "${var.application_type}-NET"
+##  resource_group_name  = "${var.resource_group}"
+#}
 
-data "azurerm_public_ip" "test"{
-  name                = "${var.application_type}-publicip-pubip"
-  resource_group_name = "${var.resource_group}"
-}
+##data "azurerm_public_ip" "test" {
+#  name                = "${var.application_type}-publicip-pubip"
+#  resource_group_name = "${var.resource_group}"
+#}
 
 resource "azurerm_network_interface" "test" {
   name                = "${var.application_type}-${var.resource_type}"
@@ -21,11 +21,11 @@ resource "azurerm_network_interface" "test" {
 
   ip_configuration {
     name                          = "internal"
-    #subnet_id                     = "myApplication-NET"
-    subnet_id                     = data.azurerm_subnet.test.id
+    subnet_id                     = "myApplication-NET"
+    #subnet_id                     = data.azurerm_subnet.test.id
     private_ip_address_allocation = "Dynamic"
-    #public_ip_address_id          = "myApplication-publicip-pubip" 
-    public_ip_address_id          = data.azurerm_public_ip.test.id 
+    public_ip_address_id          = "myApplication-publicip-pubip" 
+    #public_ip_address_id          = data.azurerm_public_ip.test.id 
   }
 }
 
