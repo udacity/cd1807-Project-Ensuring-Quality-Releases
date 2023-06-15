@@ -11,3 +11,11 @@ variable "resource_type" {
 variable "resource_group" {
   default =  "Azuredevops"
 }
+
+variable "subnet_id" {
+#  default =  "Azuredevops"
+}
+
+variable "public_ip_address_id" {
+#  default =  "Azuredevops"
+}

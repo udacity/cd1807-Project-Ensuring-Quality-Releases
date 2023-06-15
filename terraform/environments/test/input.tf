@@ -16,3 +16,5 @@ variable address_prefix_test {}
 variable address_prefixes_test {}
 variable address_space {}
 
+# VM
+variable subnet_id {}

@@ -60,8 +60,10 @@ module "publicip" {
 }
 module "vm" {
   source           = "../../modules/vm"
-#  location         = "${var.location}"
-#  application_type = "${var.application_type}"
-#  resource_type    = "VM"
-#  resource_group    = "${var.resource_group}"
+  location         = "${var.location}"
+  application_type = "${var.application_type}"
+  resource_type    = "VM"
+  resource_group   = "${var.resource_group}"
+  subnet_id        = "${module.network.subnet_id_test}"
+  public_ip_address_id          = "${module.publicip.public_ip_address_id}" 
 }
