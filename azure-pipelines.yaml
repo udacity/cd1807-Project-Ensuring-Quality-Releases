@@ -8,8 +8,8 @@ trigger:
 
 # ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
 # Otherwise, comment out the line below. 
-#pool: myAgentPool
-pool: "Azure Pipelines"
+pool: myAgentPool
+#pool: "Azure Pipelines"
 
 variables:
   python.version: '3.7.6'
