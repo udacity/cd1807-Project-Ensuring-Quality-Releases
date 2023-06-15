@@ -11,7 +11,3 @@ variable "resource_type" {
 variable "resource_group" {
   default =  "Azuredevops"
 }
-
-variable "resource_group" {
-  default =  "Azuredevops"
-}
