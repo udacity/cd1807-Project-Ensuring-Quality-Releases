@@ -147,7 +147,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        rootFolderOrFile: 
+        rootFolderOrFile: $(Build.ArtifactStagingDirectory) 
         includeRootFolder: false
         archiveType: 'zip'
        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
@@ -181,7 +181,7 @@ stages:
   - deployment: FakeRestAPI
     pool:
       vmImage: 'Ubuntu-18.04'      
-    environment: "project_demo"   # ToDo
+    environment: "linux-test"   # ToDo
     strategy:
       runOnce:
         deploy:
