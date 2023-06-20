@@ -1,6 +1,6 @@
 
 variable "location" {
-  default = "East US"
+  default = "West Europe"
 }
 variable "application_type" {
   default =  "myApplication"
