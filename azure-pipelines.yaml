@@ -31,10 +31,11 @@ stages:
     #--------------------------------------------#  
     # Use Terraform to create the Infrastructure      
     # Install Terraform on the pipeline agent 
-    - task: TerraformInstaller@2
+    - task: TerraformInstaller@0
       displayName: 'Terrafom installation'
       inputs:
-        terraformVersion: '1.2.9'
+#        terraformVersion: '1.2.9'
+        terraformVersion: 'latest'
     
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
