@@ -1,9 +1,9 @@
 
 variable "location" {
-  default = "West Europe"
+#  default = "West Europe"
 }
 variable "application_type" {
-  default =  "myApplication"
+ # default =  "wsApplication"
 }
 variable "resource_type" {
   default =  "VM"

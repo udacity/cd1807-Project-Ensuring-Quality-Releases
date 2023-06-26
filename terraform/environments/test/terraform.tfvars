@@ -1,14 +1,14 @@
 # Azure subscription vars
-subscription_id = "0ee6d06f-69ab-4b3b-9f35-003e1b6eb227"
-client_id = "a322c8ba-b16f-4959-b92a-44e5498e0ac4"
-client_secret = "q.I8Q~23pY7N6QMVHYqipy5._abAIkzMAlnm2bPl"
+subscription_id = "51003162-956a-4e6f-877b-3d0d913c7ca1"
+client_id = "4752abf0-5fb0-4983-b927-77625843e362"
+client_secret = "9t28Q~BoLRRe-BOo~m9kx7MgL-HUxPFYNOhqib7S"
 tenant_id = "f958e84a-92b8-439f-a62d-4f45996b6d07"
 
 # Resource Group/Location
-location = "West Europe"
+location = "South Central US"
 resource_group_name = "Azuredevops"
 resource_group = "Azuredevops"
-application_type = "myApplication"
+application_type = "wsApplication"
 
 # Network
 virtual_network_name = "myVNet"
