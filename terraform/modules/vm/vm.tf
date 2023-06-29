@@ -16,7 +16,7 @@ resource "azurerm_linux_virtual_machine" "test" {
   name                = "${var.application_type}-${var.resource_type}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
-  size                = "Standard_DS1_v2"
+  size                = "Standard_B1s"
   admin_username      = "adminuser"
   admin_password      = "adminuserP@55"
   disable_password_authentication = "false"
