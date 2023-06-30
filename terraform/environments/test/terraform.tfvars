@@ -8,7 +8,7 @@ tenant_id = "514cd75c-be1c-45da-8ad0-46bb2c5e4502"
 location = "Poland Central"
 resource_group_name = "Azuredevops"
 resource_group = "Azuredevops"
-application_type = "wsApplication"
+application_type = "wsApplication_v1"
 
 # Network
 virtual_network_name = "myVNet"
