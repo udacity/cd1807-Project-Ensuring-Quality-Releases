@@ -103,7 +103,6 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)
     # Postman Data Validation Test Suite    
     # ToDo: Verify the working directory
-    #NIE DZIAŁĄ
     - task: CmdLine@2
       displayName: Run Data Validation Tests
       continueOnError: true
