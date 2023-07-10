@@ -193,7 +193,7 @@ stages:
               azureSubscription: 'AzureRMconn3'     # ToDo
               appName: 'wswebApplication-AppService'               # ToDo
               appType: webApp
-              package: $(Pipeline.Workspace)/a/27-fakerestapi.zip       # ToDo: Use the published zip artifact. 
+              package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip       # ToDo: Use the published zip artifact. 
 #              package: $(Pipeline.Workspace)/<artifact>/<archiveFile>       # ToDo: Use the published zip artifact. 
           #--------------------------------------------#    
           # Run JMeter test suite against the App Service
