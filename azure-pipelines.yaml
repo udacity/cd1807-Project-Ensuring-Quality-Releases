@@ -203,7 +203,7 @@ stages:
               script: |
                 wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.tgz"
                 tar -xf apache-jmeter-5.6.tgz
-                unzip -o $(Pipeline.Workspace)/a/$(Build.BuildId)-perftests.zip
+                unzip -o $(Build.BuildId)-perftests.zip
                 ./apache-jmeter-5.6/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
                 cat jmeter.log                                                                           # ToDo: Write your commands
               workingDirectory: $(Pipeline.Workspace)/a          # ToDo: Use the artifact name from the task above
