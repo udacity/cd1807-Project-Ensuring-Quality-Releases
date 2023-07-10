@@ -217,9 +217,9 @@ stages:
   - deployment: VMDeploy
     displayName: Selenium Tests
     environment:
-      resourceName: linux-test       # ToDo: Change/provide a name
+      name: linux-test2       # ToDo: Change/provide a name
       resourceType: VirtualMachine
-      #tags: selenium
+      tags: selenium
     strategy:
       runOnce:
         deploy:
