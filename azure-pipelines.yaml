@@ -205,7 +205,7 @@ stages:
                 wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.tgz"
                 tar -xf apache-jmeter-5.6.tgz
                 unzip -o $(Build.BuildId)-perftests.zip
-                ./apache-jmeter-5.6/bin/jmeter -n -t Pautomatedtesting/jmeter/erformanceTestSuite.jmx -j jmeter.log -f
+                ./apache-jmeter-5.6/bin/jmeter -n -t automatedtesting/jmeter/PerformanceTestSuite.jmx -j jmeter.log -f
                 cat jmeter.log                                                                           # ToDo: Write your commands
               workingDirectory: $(Pipeline.Workspace)/drop-perftests          # ToDo: Use the artifact name from the task above
 #              workingDirectory: $(Pipeline.Workspace)/drop-fakerestapi          # ToDo: Use the artifact name from the task above
