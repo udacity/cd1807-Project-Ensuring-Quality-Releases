@@ -19,6 +19,9 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
   environmentName: 'linux-test'
+  parameters:
+    - name: envName
+      default: EnvironmentName
 
 stages:
 #--------------------------------------------#  
@@ -219,7 +222,7 @@ stages:
     environment:
       name: "linux-test"       # ToDo: Change/provide a name
       resourceType: VirtualMachine
-      tags: selenium
+    #  tags: selenium
     strategy:
       runOnce:
         deploy:
