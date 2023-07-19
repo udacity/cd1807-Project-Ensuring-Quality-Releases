@@ -218,11 +218,13 @@ stages:
   # Selenium | Functional UI Tests
   # ToDo: 
   - deployment: VMDeploy
-    displayName: Selenium Tests
+    displayName: Selenium UI Tests
     environment:
-      name: "linux-test"       # ToDo: Change/provide a name
+      name: '$(environmentName)'
       resourceType: VirtualMachine
-    #  tags: selenium
+#      name: "linux-test"       # ToDo: Change/provide a name
+#      resourceType: VirtualMachine
+#      tags: selenium
     strategy:
       runOnce:
         deploy:
