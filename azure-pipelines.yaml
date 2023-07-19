@@ -19,9 +19,10 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
   environmentName: 'linux-test'
-  parameters:
-    - name: envName
-      default: EnvironmentName
+
+#  parameters:
+#    - name: envName
+#      default: EnvironmentName
 
 stages:
 #--------------------------------------------#  
