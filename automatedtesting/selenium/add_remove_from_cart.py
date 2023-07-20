@@ -4,4 +4,4 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 # Start the browser and navigate to webpage
 driver = webdriver.Chrome()
-driver.get('http://wswebapplication-appservice.azurewebsites.net')
+driver.get(https://wswebapplication-appservice.azurewebsites.net/automatedtesting/selenium/login.py')
