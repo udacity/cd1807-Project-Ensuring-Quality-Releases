@@ -18,11 +18,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'linux-test'
-
-#  parameters:
-#    - name: envName
-#      default: EnvironmentName
+  environmentName: 'linux-test3'
 
 stages:
 #--------------------------------------------#  
@@ -186,7 +182,7 @@ stages:
   - deployment: FakeRestAPI
     pool:
       vmImage: 'Ubuntu-20.04'      
-    environment: "linux-test"   # ToDo
+    environment: '$(environmentName)'  # ToDo
     strategy:
       runOnce:
         deploy:
