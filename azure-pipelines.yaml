@@ -221,7 +221,7 @@ stages:
       resourceType: VirtualMachine
 #      name: "linux-test"       # ToDo: Change/provide a name
 #      resourceType: VirtualMachine
-#      tags: selenium
+      tags: selenium
     strategy:
       runOnce:
         deploy:
