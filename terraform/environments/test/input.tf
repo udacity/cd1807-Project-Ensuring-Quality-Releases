@@ -7,10 +7,14 @@ variable "tenant_id" {}
 # Resource Group/Location
 variable "location" {}
 variable "resource_group" {}
+variable "resource_group_name" {}
 variable "application_type" {}
 
 # Network
 variable virtual_network_name {}
 variable address_prefix_test {}
+variable address_prefixes_test {}
 variable address_space {}
 
+# VM
+#variable subnet_id {}
