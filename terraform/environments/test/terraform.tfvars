@@ -5,9 +5,9 @@ client_secret = "YNf8Q~K7icfuDFQE~gL1NJ4En~eO32nTARW.2adD"
 tenant_id = "514cd75c-be1c-45da-8ad0-46bb2c5e4502"
 
 # Resource Group/Location
-location = "Poland Central"
-resource_group_name = "Azuredevops"
-resource_group = "Azuredevops"
+location = "West Europe"
+resource_group_name = "Azuredevops2"
+resource_group = "Azuredevops2"
 application_type = "wswebApplication"
 
 # Network
