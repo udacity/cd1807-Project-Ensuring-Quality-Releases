@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Create Employee",
+			"name": "Create Author",
 			"event": [
 				{
 					"listen": "test",
@@ -17,7 +17,7 @@
 							"    pm.expect(pm.response.text()).to.include(\"success\");",
 							"});",
 							"var json = pm.response.json();",
-							"pm.environment.set(\"id\", json.data.id);"
+							"pm.environment.set(\"id\", json.id);"
 						],
 						"type": "text/javascript"
 					}
@@ -25,10 +25,15 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"salary\": \"{{salary}}\",\n    \"age\": \"{{age}}\"\n}",
+					"raw": "{\n    \"id\": 0,\n    \"idBook\": 0,\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,24 +41,24 @@
 					}
 				},
 				"url": {
-					"raw": "http://dummy.restapiexample.com/api/v1/create",
-					"protocol": "http",
+					"raw": "https://fakerestapi.azurewebsites.net/api/v1/Authors",
+					"protocol": "https",
 					"host": [
-						"dummy",
-						"restapiexample",
-						"com"
+						"fakerestapi",
+						"azurewebsites",
+						"net"
 					],
 					"path": [
 						"api",
 						"v1",
-						"create"
+						"Authors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get All Employees",
+			"name": "Get All Authors",
 			"event": [
 				{
 					"listen": "test",
@@ -73,17 +78,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://dummy.restapiexample.com/api/v1/employees",
-					"protocol": "http",
+					"raw": "https://fakerestapi.azurewebsites.net/api/v1/Authors",
+					"protocol": "https",
 					"host": [
-						"dummy",
-						"restapiexample",
-						"com"
+						"fakerestapi",
+						"azurewebsites",
+						"net"
 					],
 					"path": [
 						"api",
 						"v1",
-						"employees"
+						"Authors"
 					]
 				}
 			},
