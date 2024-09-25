@@ -6,7 +6,7 @@ tenant_id = ""
 
 # Resource Group/Location
 location = ""
-resource_group_name = ""
+resource_group = ""
 application_type = ""
 
 # Network
